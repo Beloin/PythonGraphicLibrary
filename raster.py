@@ -81,7 +81,7 @@ def raster(vec: Vector, scale: Scale):
         while y < vec[1][1]:
             y += 1
             x = (y - b) / m
-        create_frag(fragls, x, y)
+            create_frag(fragls, x, y)
 
     return fragls
 
@@ -107,8 +107,8 @@ def main():
     scaled_vec = scale2d_interval(test_vector, (9, 9), rmin=0)
     assert scaled_vec == vector_9x9
 
-    scale = 100
-    scale_y = 100
+    scale = 10
+    scale_y = 50
     norm_vec: Vector = (.2, .3), (.8, .7)
     mx = [[0 for _ in range(scale)] for _ in range(scale_y)]
     points = raster(norm_vec, (scale, scale_y))
@@ -116,7 +116,7 @@ def main():
     for x, y in points:
         x = math.floor(x)
         y = math.floor(y)
-        mx[x][y] = 1
+        mx[y][x] = 1
 
     pretty_printmx(mx)
 
