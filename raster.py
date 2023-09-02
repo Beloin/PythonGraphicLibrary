@@ -50,7 +50,7 @@ def raster(vec: Vector, scale: Scale):
     Raster o Vector using the equation of a line: `y = m*x + b`
 
     :param vec should be normalized between 0 and 1
-    :param scale
+    :param scale the Cols X Lines
 
     :return list of points that should be painted (based on the "middle" of the point)
     """
@@ -58,27 +58,33 @@ def raster(vec: Vector, scale: Scale):
 
     fragls: list[Point] = []
 
-    dx = vec[1][0] - vec[0][0]
-    dy = vec[1][1] - vec[0][1]
+    x1 = vec[0][0]
+    x2 = vec[1][0]
+
+    y1 = vec[0][1]
+    y2 = vec[1][1]
+
+    dx = x2 - x1
+    dy = y2 - y1
 
     if not dx:
         m = 0
     else:
         m = dy / dx
 
-    x = vec[0][0]
-    y = vec[0][1]
+    x = x1
+    y = y1
 
     b = y - m * x
     if math.fabs(dx) > math.fabs(dy):
         create_frag(fragls, x, y)
-        while x < vec[1][0]:
+        while x < x2:
             x += 1
             y = m * x + b
             create_frag(fragls, x, y)
     else:
         create_frag(fragls, x, y)
-        while y < vec[1][1]:
+        while y < y2:
             y += 1
             x = (y - b) / m
             create_frag(fragls, x, y)
@@ -99,6 +105,15 @@ def pretty_printmx(mx):
         print("|")
 
 
+def convert_img(matrix):
+    mx2 = [[0 for _ in range(len(matrix[0]))] for _ in range(len(matrix))]
+    for line in range(len(matrix)):
+        for column in range(len(matrix[line])):
+            line_index = (len(matrix) - 1) - line
+            mx2[line_index][column] = matrix[line][column]
+    return mx2
+
+
 def main():
     test_vector: Vector = (0, 0), (0.2, 0.1)
     vector_9x9: Vector = (0, 0), (1.8, .9)
@@ -107,11 +122,12 @@ def main():
     scaled_vec = scale2d_interval(test_vector, (9, 9), rmin=0)
     assert scaled_vec == vector_9x9
 
-    scale = 10
-    scale_y = 50
-    norm_vec: Vector = (.2, .3), (.8, .7)
-    mx = [[0 for _ in range(scale)] for _ in range(scale_y)]
-    points = raster(norm_vec, (scale, scale_y))
+    scale_x = 720
+    scale_y = 480
+    # norm_vec: Vector = (.2, .3), (.8, .7)
+    norm_vec: Vector = (0, 0), (.2, .8)
+    mx = [[0 for _ in range(scale_x)] for _ in range(scale_y)]
+    points = raster(norm_vec, (scale_x, scale_y))
 
     for x, y in points:
         x = math.floor(x)
@@ -120,6 +136,8 @@ def main():
 
     pretty_printmx(mx)
 
+    c_mx = convert_img(mx)
+    pretty_printmx(c_mx)
 
 if __name__ == '__main__':
     main()
