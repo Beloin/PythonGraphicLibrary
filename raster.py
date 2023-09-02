@@ -1,16 +1,19 @@
 import math
 
-
 Scale = tuple[int, int]
-Point = tuple[float, float]
-Vector = tuple[Point, Point]
+"""
+Scale: Cols x Lines
+"""
 
+Point = tuple[float, float]
+
+Vector = tuple[Point, Point]
 """
 Always P2 >= P1
 """
 
 
-def scale2d_interval(vec: Vector, scale: Scale, rmin=-1, rmax=1, scale_y: Scale = None) -> Vector:
+def scale2d_interval(vec: Vector, scale: Scale, rmin=-1, rmax=1) -> Vector:
     # 0 -> 1
     # s1 -> s2
     # You need to scale X and then Y (or vice versa)
@@ -18,19 +21,17 @@ def scale2d_interval(vec: Vector, scale: Scale, rmin=-1, rmax=1, scale_y: Scale 
 
     svec = []
 
-    if not scale_y:
-        scale_y = scale
-
+    scale_x, scale_y = scale
     for point in vec:
         x = point[0]
         xs = (x - rmin) / (rmax - rmin)
-        xs *= (scale[1] - scale[0])
-        xs += scale[0]
+        xs *= (scale_x - 0)
+        xs += 0
 
         y = point[1]
         ys = (y - rmin) / (rmax - rmin)
-        ys *= (scale_y[1] - scale_y[0])
-        ys += scale_y[0]
+        ys *= (scale_y - 0)
+        ys += 0
 
         svec.append((xs, ys))
 
@@ -44,7 +45,7 @@ def create_frag(fragls: list[tuple[float, float]], x: float, y: float):
 
 
 # TODO: Is this interpolation?
-def raster(vec: Vector, scale: Scale, scale_y: Scale = None):
+def raster(vec: Vector, scale: Scale):
     """
     Raster o Vector using the equation of a line: `y = m*x + b`
 
@@ -53,7 +54,7 @@ def raster(vec: Vector, scale: Scale, scale_y: Scale = None):
 
     :return list of points that should be painted (based on the "middle" of the point)
     """
-    vec = scale2d_interval(vec, scale, 0, 1, scale_y)
+    vec = scale2d_interval(vec, scale, 0, 1)
 
     fragls: list[Point] = []
 
@@ -103,19 +104,19 @@ def main():
     vector_9x9: Vector = (0, 0), (1.8, .9)
 
     # Assert scaled_vector
-    scaled_vec = scale2d_interval(test_vector, (0, 9), rmin=0)
+    scaled_vec = scale2d_interval(test_vector, (9, 9), rmin=0)
     assert scaled_vec == vector_9x9
 
-    scale = 10
-    scale_y = 20
+    scale = 100
+    scale_y = 100
     norm_vec: Vector = (.2, .3), (.8, .7)
     mx = [[0 for _ in range(scale)] for _ in range(scale_y)]
-    points = raster(norm_vec, (0, scale), (0, scale_y))
+    points = raster(norm_vec, (scale, scale_y))
 
     for x, y in points:
         x = math.floor(x)
         y = math.floor(y)
-        mx[y][x] = 1
+        mx[x][y] = 1
 
     pretty_printmx(mx)
 
