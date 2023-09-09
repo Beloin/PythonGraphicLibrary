@@ -54,7 +54,7 @@ def raster(vec: Vector, scale: Scale):
 
     :return list of points that should be painted (based on the "middle" of the point)
     """
-    vec = scale2d_interval(vec, scale, 0, 1)
+    vec = scale2d_interval(vec, scale, 0, 1)  # Normalize to -1 and 1
 
     fragls: list[Point] = []
 
@@ -63,6 +63,10 @@ def raster(vec: Vector, scale: Scale):
 
     y1 = vec[0][1]
     y2 = vec[1][1]
+
+    if x1 > x2 or y1 > y2:
+        x1, x2 = x2, x1
+        y1, y2, = y2, y1
 
     dx = x2 - x1
     dy = y2 - y1
@@ -86,15 +90,11 @@ def raster(vec: Vector, scale: Scale):
         create_frag(fragls, x, y)
         while y < y2:
             y += 1
-            x = (y - b) / m
+            if m != 0:
+                x = (y - b) / m
             create_frag(fragls, x, y)
 
     return fragls
-
-
-def scale2d(sx, sy):
-    mx = [[sx, 0], [sy, 0]]
-    pass  # TODO: Complete this scale
 
 
 def pretty_printmx(mx):
@@ -122,22 +122,24 @@ def main():
     scaled_vec = scale2d_interval(test_vector, (9, 9), rmin=0)
     assert scaled_vec == vector_9x9
 
-    scale_x = 720
-    scale_y = 480
+    scale_x = 10
+    scale_y = 10
     # norm_vec: Vector = (.2, .3), (.8, .7)
-    norm_vec: Vector = (0, 0), (.2, .8)
+    norm_vec: Vector = (.3, 0), (1, 1)
     mx = [[0 for _ in range(scale_x)] for _ in range(scale_y)]
     points = raster(norm_vec, (scale_x, scale_y))
 
     for x, y in points:
         x = math.floor(x)
         y = math.floor(y)
-        mx[y][x] = 1
+        if len(mx) > y and len(mx[0]) > x:
+            mx[y][x] = 1
 
     pretty_printmx(mx)
 
     c_mx = convert_img(mx)
     pretty_printmx(c_mx)
+
 
 if __name__ == '__main__':
     main()
