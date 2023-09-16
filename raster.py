@@ -25,12 +25,12 @@ def scale2d_interval(vec: Vector, scale: Scale, rmin=-1, rmax=1) -> Vector:
     for point in vec:
         x = point[0]
         xs = (x - rmin) / (rmax - rmin)
-        xs *= (scale_x - 0)
+        xs *= scale_x - 0
         xs += 0
 
         y = point[1]
         ys = (y - rmin) / (rmax - rmin)
-        ys *= (scale_y - 0)
+        ys *= scale_y - 0
         ys += 0
 
         svec.append((xs, ys))
@@ -41,7 +41,7 @@ def scale2d_interval(vec: Vector, scale: Scale, rmin=-1, rmax=1) -> Vector:
 def create_frag(fragls: list[tuple[float, float]], x: float, y: float):
     xm = math.floor(x)
     ym = math.floor(y)
-    fragls.append((xm + .5, ym + .5))
+    fragls.append((xm + 0.5, ym + 0.5))
 
 
 # TODO: Is this interpolation?
@@ -114,9 +114,46 @@ def convert_img(matrix):
     return mx2
 
 
+def draw_polygon(vlist: list[Point], scale: Scale):
+    mx = [[0 for _ in range(scale[0])] for _ in range(scale[1])]
+    pxs = []
+    length = len(vlist)
+    for i in range(length):
+        if i < length - 1:
+            final = i + 1
+        else:
+            final = 0
+
+        vx = (vlist[i], vlist[final])
+
+        points = raster(vx, scale)
+        pxs.extend(points)
+
+    insert_points(mx, pxs)
+    return mx
+
+
+def insert_points(mx, points):
+    for x, y in points:
+        x = math.floor(x)
+        y = math.floor(y)
+        if len(mx) > y and len(mx[0]) > x:
+            mx[y][x] = 1
+
+
+def main2():
+    scale = (20, 20)
+    #           (.2, .2)
+    #
+    #  (.0, .0)            (.4, .0)
+    triangle = [(.0, .0), (.2, .2), (.4, .0)]
+    polygon = draw_polygon(triangle, scale)
+    pretty_printmx(polygon)
+
+
 def main():
     test_vector: Vector = (0, 0), (0.2, 0.1)
-    vector_9x9: Vector = (0, 0), (1.8, .9)
+    vector_9x9: Vector = (0, 0), (1.8, 0.9)
 
     # Assert scaled_vector
     scaled_vec = scale2d_interval(test_vector, (9, 9), rmin=0)
@@ -125,15 +162,11 @@ def main():
     scale_x = 10
     scale_y = 10
     # norm_vec: Vector = (.2, .3), (.8, .7)
-    norm_vec: Vector = (.3, 0), (1, 1)
+    norm_vec: Vector = (0.3, 0), (1, 1)
     mx = [[0 for _ in range(scale_x)] for _ in range(scale_y)]
     points = raster(norm_vec, (scale_x, scale_y))
 
-    for x, y in points:
-        x = math.floor(x)
-        y = math.floor(y)
-        if len(mx) > y and len(mx[0]) > x:
-            mx[y][x] = 1
+    insert_points(mx, points)
 
     pretty_printmx(mx)
 
@@ -141,5 +174,6 @@ def main():
     pretty_printmx(c_mx)
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    # main()
+    main2()
