@@ -115,7 +115,6 @@ def convert_img(matrix):
 
 
 def draw_polygon(vlist: list[Point], scale: Scale):
-    mx = [[0 for _ in range(scale[0])] for _ in range(scale[1])]
     pxs = []
     length = len(vlist)
     for i in range(length):
@@ -129,8 +128,12 @@ def draw_polygon(vlist: list[Point], scale: Scale):
         points = raster(vx, scale)
         pxs.extend(points)
 
-    insert_points(mx, pxs)
-    return mx
+    return pxs
+
+
+def fill_polygon(ppoints: list[tuple[int, int]], scale: Scale):
+
+    pass
 
 
 def insert_points(mx, points):
@@ -143,12 +146,15 @@ def insert_points(mx, points):
 
 def main2():
     scale = (20, 20)
+    mx = [[0 for _ in range(scale[0])] for _ in range(scale[1])]
     #           (.2, .2)
     #
     #  (.0, .0)            (.4, .0)
     triangle = [(.0, .0), (.2, .2), (.4, .0)]
     polygon = draw_polygon(triangle, scale)
-    pretty_printmx(polygon)
+
+    insert_points(mx, polygon)
+    pretty_printmx(mx)
 
 
 def main():
