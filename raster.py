@@ -134,23 +134,37 @@ def draw_polygon(vlist: list[Point], scale: Scale) -> list[Point]:
 def fill_polygon(polygon: list[Point], scale: Scale):
     # TODO: Use temp_mx to calculate scan line per polygon
     # Points: (y, x), (y2, x2), (y2, x2)
-    temp_mx = [[0 for _ in range(scale[0])] for _ in range(scale[1])]
-    insert_points(temp_mx, polygon)
+    # temp_mx = [[0 for _ in range(scale[0])] for _ in range(scale[1])]
+    # insert_points(temp_mx, polygon)
 
     new_pts = []
-    for line in range(len(temp_mx)):
+    for line in range(scale[0]):
         in_count = 0
         to_be = []
-        for column in range(len(temp_mx[line])):
-            if temp_mx[line][column]:
+        for col in range(scale[1]):
+            if (col+.5, line+.5) in polygon:  # This could be better placed using some O(1)
                 in_count += 1
 
-            if in_count % 2:  # TODO: How to know its not an edge
-
-                to_be.append((column, line))
+            if in_count % 2:
+                to_be.append((col, line))
 
         if in_count % 2 == 0:
             new_pts.extend(to_be)
+
+    # temp_mx = []
+    # new_pts = []
+    # for line in range(len(temp_mx)):
+    #     in_count = 0
+    #     to_be = []
+    #     for column in range(len(temp_mx[line])):
+    #         if temp_mx[line][column]:
+    #             in_count += 1
+    #
+    #         if in_count % 2:
+    #             to_be.append((column, line))
+    #
+    #     if in_count % 2 == 0:
+    #         new_pts.extend(to_be)
 
     polygon.extend(new_pts)
 
