@@ -114,7 +114,7 @@ def convert_img(matrix):
     return mx2
 
 
-def draw_polygon(vlist: list[Point], scale: Scale):
+def draw_polygon(vlist: list[Point], scale: Scale) -> list[Point]:
     pxs = []
     length = len(vlist)
     for i in range(length):
@@ -131,9 +131,30 @@ def draw_polygon(vlist: list[Point], scale: Scale):
     return pxs
 
 
-def fill_polygon(ppoints: list[tuple[int, int]], scale: Scale):
+def fill_polygon(polygon: list[Point], scale: Scale):
+    # TODO: Use temp_mx to calculate scan line per polygon
+    # Points: (y, x), (y2, x2), (y2, x2)
+    temp_mx = [[0 for _ in range(scale[0])] for _ in range(scale[1])]
+    insert_points(temp_mx, polygon)
 
-    pass
+    new_pts = []
+    for line in range(len(temp_mx)):
+        in_count = 0
+        to_be = []
+        for column in range(len(temp_mx[line])):
+            if temp_mx[line][column]:
+                in_count += 1
+
+            if in_count % 2:  # TODO: How to know its not an edge
+
+                to_be.append((column, line))
+
+        if in_count % 2 == 0:
+            new_pts.extend(to_be)
+
+    polygon.extend(new_pts)
+
+    return polygon
 
 
 def insert_points(mx, points):
@@ -153,7 +174,9 @@ def main2():
     triangle = [(.0, .0), (.2, .2), (.4, .0)]
     polygon = draw_polygon(triangle, scale)
 
+    fill_polygon(polygon, scale)
     insert_points(mx, polygon)
+
     pretty_printmx(mx)
 
 
