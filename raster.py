@@ -54,7 +54,7 @@ def raster(vec: Vector, scale: Scale):
 
     :return list of points that should be painted (based on the "middle" of the point)
     """
-    vec = scale2d_interval(vec, scale, 0, 1)  # Normalize to -1 and 1
+    vec = scale2d_interval(vec, scale, -1, 1)  # Normalize to -1 and 1
 
     fragls: list[Point] = []
 
@@ -71,7 +71,7 @@ def raster(vec: Vector, scale: Scale):
     dx = x2 - x1
     dy = y2 - y1
 
-    if not dx:
+    if dx == 0:
         m = 0
     else:
         m = dy / dx
@@ -82,12 +82,18 @@ def raster(vec: Vector, scale: Scale):
     b = y - m * x
     if math.fabs(dx) > math.fabs(dy):
         create_frag(fragls, x, y)
+        # TODO: Problem with a reverse straight horizontal line
+        if x > x2:
+            x, x2 = x2, x
         while x < x2:
             x += 1
             y = m * x + b
             create_frag(fragls, x, y)
     else:
         create_frag(fragls, x, y)
+        # TODO: Problem with a reverse straight vertical line
+        if y > y2:
+            y, y2 = y2, y
         while y < y2:
             y += 1
             if m != 0:
@@ -131,40 +137,39 @@ def draw_polygon(vlist: list[Point], scale: Scale) -> list[Point]:
     return pxs
 
 
+# TODO: Problem with high resolutions (1920, 1080)
 def fill_polygon(polygon: list[Point], scale: Scale):
-    # TODO: Use temp_mx to calculate scan line per polygon
-    # Points: (y, x), (y2, x2), (y2, x2)
-    # temp_mx = [[0 for _ in range(scale[0])] for _ in range(scale[1])]
-    # insert_points(temp_mx, polygon)
-
-    new_pts = []
-    for line in range(scale[0]):
-        in_count = 0
-        to_be = []
-        for col in range(scale[1]):
-            if (col+.5, line+.5) in polygon:  # This could be better placed using some O(1)
-                in_count += 1
-
-            if in_count % 2:
-                to_be.append((col, line))
-
-        if in_count % 2 == 0:
-            new_pts.extend(to_be)
-
-    # temp_mx = []
     # new_pts = []
-    # for line in range(len(temp_mx)):
+    # for line in range(scale[0]):
     #     in_count = 0
     #     to_be = []
-    #     for column in range(len(temp_mx[line])):
-    #         if temp_mx[line][column]:
+    #     for col in range(scale[1]):
+    #         if (col + .5, line + .5) in polygon:  # This could be better placed using some O(1)
     #             in_count += 1
     #
     #         if in_count % 2:
-    #             to_be.append((column, line))
+    #             to_be.append((col, line))
     #
     #     if in_count % 2 == 0:
     #         new_pts.extend(to_be)
+
+    # TODO: Use temp_mx to calculate scan line per polygon
+    # Points: (y, x), (y2, x2), (y2, x2)
+    temp_mx = [[0 for _ in range(scale[0])] for _ in range(scale[1])]
+    insert_points(temp_mx, polygon)
+    new_pts = []
+    for line in range(len(temp_mx)):
+        in_count = 0
+        to_be = []
+        for column in range(len(temp_mx[line])):
+            if temp_mx[line][column]:
+                in_count += 1
+
+            if in_count % 2:
+                to_be.append((column, line))
+
+        if in_count % 2 == 0:
+            new_pts.extend(to_be)
 
     polygon.extend(new_pts)
 
@@ -180,12 +185,13 @@ def insert_points(mx, points):
 
 
 def main2():
-    scale = (20, 20)
+    scale = (100, 300)
     mx = [[0 for _ in range(scale[0])] for _ in range(scale[1])]
     #           (.2, .2)
     #
     #  (.0, .0)            (.4, .0)
-    triangle = [(.0, .0), (.2, .2), (.4, .0)]
+    #           (.2, -.2)
+    triangle = [(.0, .0), (.2, .2), (.4, .0), (.2, -.2)]
     polygon = draw_polygon(triangle, scale)
 
     fill_polygon(polygon, scale)
