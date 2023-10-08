@@ -120,6 +120,7 @@ def convert_img(matrix):
     return mx2
 
 
+# TODO: Change to Edge list instead of vertex list
 def draw_polygon(vlist: list[Point], scale: Scale) -> list[Point]:
     pxs = []
     length = len(vlist)
