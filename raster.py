@@ -138,7 +138,7 @@ def draw_polygon(vlist: list[Point], scale: Scale) -> list[Point]:
     return pxs
 
 
-# TODO: Problem with high resolutions (1920, 1080)
+# TODO: Problem with high resolutions (1920, 1080) -> I think the problem is that is ambigous which point to print, since we have closer points
 def fill_polygon(polygon: list[Point], scale: Scale):
     # new_pts = []
     # for line in range(scale[0]):
