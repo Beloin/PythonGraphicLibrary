@@ -44,7 +44,6 @@ def create_frag(fragls: list[tuple[float, float]], x: float, y: float):
     fragls.append((xm + 0.5, ym + 0.5))
 
 
-# TODO: Is this interpolation?
 def raster(vec: Vector, scale: Scale):
     """
     Raster o Vector using the equation of a line: `y = m*x + b`
@@ -82,7 +81,6 @@ def raster(vec: Vector, scale: Scale):
     b = y - m * x
     if math.fabs(dx) > math.fabs(dy):
         create_frag(fragls, x, y)
-        # TODO: Problem with a reverse straight horizontal line
         if x > x2:
             x, x2 = x2, x
         while x < x2:
@@ -91,7 +89,6 @@ def raster(vec: Vector, scale: Scale):
             create_frag(fragls, x, y)
     else:
         create_frag(fragls, x, y)
-        # TODO: Problem with a reverse straight vertical line
         if y > y2:
             y, y2 = y2, y
         while y < y2:
@@ -140,8 +137,8 @@ def draw_polygon(vlist: list[Point], scale: Scale) -> list[Point]:
 
 # TODO: Problem with high resolutions (1920, 1080) ->
 #  I think the problem is that is ambigous which point to print, since we have closer points
+#  Actually, the problem is when we have different rates, example 16:9
 def fill_polygon(polygon: list[Point], scale: Scale):
-    # Points: (y, x), (y2, x2), (y2, x2)
     temp_mx = [[0 for _ in range(scale[0])] for _ in range(scale[1])]
     insert_points(temp_mx, polygon)
     new_pts = []
@@ -150,7 +147,8 @@ def fill_polygon(polygon: list[Point], scale: Scale):
         to_be = []
         for column in range(len(temp_mx[line])):
             if temp_mx[line][column]:
-                in_count += 1
+                if column > 0 and temp_mx[line][column - 1] != 1:
+                    in_count += 1
 
             if in_count % 2:
                 to_be.append((column, line))
@@ -167,15 +165,12 @@ def insert_points(mx, points):
     for x, y in points:
         x = math.floor(x)
         y = math.floor(y)
-        j = math.ceil(x)
-        k = math.ceil(y)
 
         mx[y][x] = 1
-        mx[k][j] = 1
 
 
 def main2():
-    scale = (1920, 1080)
+    scale = (600, 100)
     mx = [[0 for _ in range(scale[0])] for _ in range(scale[1])]
     #           (.2, .2)
     #
