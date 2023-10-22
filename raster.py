@@ -182,12 +182,17 @@ def generate_hermite_point(p1: Point, p2: Point, t1, t2, t: float) -> Point:
     return x, y
 
 
-def insert_hermite(mx, scale: Scale, p1, p2, t1, t2, t=.1):
+def insert_hermite(mx, scale: Scale, p1, p2, t1, t2, step=.1, qtn: int = None):
     points: list[Point] = []
-    while t < 1:
-        t += .1
+
+    if qtn:
+        step = 1 / qtn
+
+    t = 0
+    while t <= 1:
         point = generate_hermite_point(p1, p2, t1, t2, t)
         points.append(point)
+        t += step
 
     vectors: list[Vector] = []
     for i in range(1, len(points)):
