@@ -145,7 +145,7 @@ def fill_polygon(polygon: list[Point], scale: Scale):
         to_be = []
         for column in range(len(temp_mx[line])):
             if temp_mx[line][column]:
-                if column > 0 and temp_mx[line][column - 1] != 1:
+                if column > 0 and (not temp_mx[line][column - 1]):
                     in_count += 1
 
             if in_count % 2:
@@ -183,29 +183,29 @@ def generate_hermite_point(p1: Point, p2: Point, t1, t2, t: float) -> Point:
 
 
 def insert_hermite(mx, scale: Scale, p1, p2, t1, t2, step=.1, qtn: int = None):
-    points: list[Point] = []
+    ptx = get_hermite_points(scale, p1, p2, t1, t2, step, qtn)
+    insert_points(mx, ptx)
 
+
+def get_hermite_points(scale: Scale, p1, p2, t1, t2, step=.1, qtn: int = None):
+    points: list[Point] = []
     if qtn:
         step = 1 / qtn
-
     t = 0
     while t <= 1:
         point = generate_hermite_point(p1, p2, t1, t2, t)
         points.append(point)
         t += step
-
     vectors: list[Vector] = []
     for i in range(1, len(points)):
         pa = points[i - 1]
         pp = points[i]
         vectors.append((pa, pp))
-
     ptx = []
     for vec in vectors:
         ts = raster(vec, scale)
         ptx.extend(ts)
-
-    insert_points(mx, ptx)
+    return ptx
 
 
 def main3():
