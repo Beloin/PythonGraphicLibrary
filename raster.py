@@ -1,4 +1,5 @@
 import math
+from typing import List, Tuple
 
 Scale = tuple[int, int]
 """
@@ -163,7 +164,55 @@ def insert_points(mx, points):
         x = math.floor(x)
         y = math.floor(y)
 
-        mx[y][x] = 1
+        if y < len(mx) and x < len(mx[0]):
+            mx[y][x] = 1
+
+
+def generate_hermite_point(p1: Point, p2: Point, t1, t2, t: float) -> Point:
+    # P(t) = THGh
+    # Will be implemented into parts. Expanding the Linear Algebra
+    pt0 = 2 * (t * t * t) - 3 * (t * t) + 1
+    pt1 = -2 * (t * t * t) + 3 * (t * t)
+    pt2 = (t * t * t) - 2 * (t * t) + t
+    pt3 = (t * t * t) - (t * t)
+
+    x = pt0 * p1[0] + pt1 * p2[0] + pt2 * t1[0] + pt3 * t2[0]
+    y = pt0 * p1[1] + pt1 * p2[1] + pt2 * t1[1] + pt3 * t2[1]
+
+    return x, y
+
+
+def insert_hermite(mx, scale: Scale, p1, p2, t1, t2, t=.1):
+    points: list[Point] = []
+    while t < 1:
+        t += .1
+        point = generate_hermite_point(p1, p2, t1, t2, t)
+        points.append(point)
+
+    vectors: list[Vector] = []
+    for i in range(1, len(points)):
+        pa = points[i - 1]
+        pp = points[i]
+        vectors.append((pa, pp))
+
+    ptx = []
+    for vec in vectors:
+        ts = raster(vec, scale)
+        ptx.extend(ts)
+
+    insert_points(mx, ptx)
+
+
+def main3():
+    scale_x = 100
+    scale_y = 100
+
+    p1, p2 = (.1, .2), (.1, .6)
+    t1, t2 = (.5, .5), (.5, .5)
+    mx = [[0 for _ in range(scale_x)] for _ in range(scale_y)]
+    insert_hermite(mx, (scale_x, scale_y), p1, p2, t1, t2)
+
+    pretty_printmx(mx)
 
 
 def main2():
@@ -207,4 +256,5 @@ def main():
 
 if __name__ == "__main__":
     # main()
-    main2()
+    # main2()
+    main3()
