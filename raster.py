@@ -164,7 +164,7 @@ def insert_points(mx, points):
         x = math.floor(x)
         y = math.floor(y)
 
-        if y < len(mx) and x < len(mx[0]):
+        if (y > 0 and x > 0) and (y < len(mx) and x < len(mx[0])):
             mx[y][x] = 1
 
 
