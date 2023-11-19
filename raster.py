@@ -47,7 +47,7 @@ def create_frag(fragls: list[tuple[float, float]], x: float, y: float):
 
 def raster(vec: Vector, scale: Scale):
     """
-    Raster o Vector using the equation of a line: `y = m*x + b`
+    Raster a Vector using the equation of a line: `y = m*x + b`
 
     :param vec should be normalized between 0 and 1
     :param scale the Cols X Lines
