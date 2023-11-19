@@ -43,7 +43,7 @@ class Vec3DList:
 
 # TODO: Maybe use -1 to 1?
 # TODO: Create a version where we convert from Object to World.. SO since that, we won't be needding -1 to 1?
-def cube(edge: float, res=.5, origin=.1, dist=0) -> Vec3DList:
+def cube(edge: float, res=.5, origin=.5, dist=0) -> Vec3DList:
     """
     Define a cube in its own object coordinates: based on 0.0 to 1.0
     @param edge size of the edge in number between 0 and 1
@@ -56,56 +56,41 @@ def cube(edge: float, res=.5, origin=.1, dist=0) -> Vec3DList:
 
     half_edge = edge / 2
 
-    # "Fisrt" Square
-    # f_p1 = (origin - half_edge, origin - half_edge, origin)
-    # f_p2 = (origin + half_edge, origin - half_edge, origin)
-    # f_p4 = (f_p1[0], f_p1[1] + edge, origin)
-    # f_p3 = (f_p2[0], f_p2[1] + edge, origin)
-    #
-    # vector.append((f_p1, f_p2))
-    # vector.append((f_p2, f_p3))
-    # vector.append((f_p3, f_p4))
-    # vector.append((f_p4, f_p1))
-
-    # Simulate 3D into 2D
-    # origin = end * step
-    # origin += dist
+    last_p1 = None
+    last_p2 = None
+    last_p3 = None
+    last_p4 = None
 
     step = 1 if res == 0 else (1 / (res * 100))
     end = 0
     while end <= 1:
         # Simulate 3D into 2D for debug porposes
-        origin = dist * end
+        virtual = dist * end
 
         curr_z_pos = origin - (half_edge * end)
-        m_p1 = (origin - half_edge, origin - half_edge, curr_z_pos)
-        m_p2 = (origin + half_edge, origin - half_edge, curr_z_pos)
+        m_p1 = (origin - half_edge + virtual, origin - half_edge + virtual, curr_z_pos)
+        m_p2 = (origin + half_edge + virtual, origin - half_edge + virtual, curr_z_pos)
 
-        m_p4 = (origin - half_edge, origin + half_edge, curr_z_pos)
-        m_p3 = (origin + half_edge, origin + half_edge, curr_z_pos)
+        m_p4 = (origin - half_edge + virtual, origin + half_edge + virtual, curr_z_pos)
+        m_p3 = (origin + half_edge + virtual, origin + half_edge + virtual, curr_z_pos)
 
         vector.append((m_p1, m_p2))
         vector.append((m_p2, m_p3))
         vector.append((m_p3, m_p4))
         vector.append((m_p4, m_p1))
 
+        # Joints
+        if last_p1 is not None:
+            vector.append((last_p1, m_p1))
+            vector.append((last_p2, m_p2))
+            vector.append((last_p3, m_p3))
+            vector.append((last_p4, m_p4))
+
+        last_p1 = m_p1
+        last_p2 = m_p2
+        last_p3 = m_p3
+        last_p4 = m_p4
+
         end += step
-
-    # Last Square
-    # b_p1 = (origin - half_edge, origin - half_edge, origin - half_edge)
-    # b_p2 = (origin + half_edge, origin - half_edge, origin - half_edge)
-    # b_p4 = (b_p1[0], b_p1[1] + edge, b_p1[2])
-    # b_p3 = (b_p2[0], b_p2[1] + edge, b_p2[2])
-
-    # Square connections
-    # vector.append((b_p1, b_p2))
-    # vector.append((b_p2, b_p3))
-    # vector.append((b_p3, b_p4))
-    # vector.append((b_p4, b_p1))
-
-    # vector.append((f_p1, b_p1))
-    # vector.append((f_p2, b_p2))
-    # vector.append((f_p3, b_p3))
-    # vector.append((f_p4, b_p4))
 
     return vector
