@@ -1,5 +1,5 @@
 import math
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 Scale = tuple[int, int]
 """
@@ -118,7 +118,6 @@ def convert_img(matrix):
     return mx2
 
 
-# TODO: Change to Edge list instead of vertex list
 def draw_polygon(vlist: list[Point], scale: Scale) -> list[Point]:
     pxs = []
     length = len(vlist)
@@ -131,6 +130,16 @@ def draw_polygon(vlist: list[Point], scale: Scale) -> list[Point]:
         vx = (vlist[i], vlist[final])
 
         points = raster(vx, scale)
+        pxs.extend(points)
+
+    return pxs
+
+
+def draw_edge_list(edges: list[tuple[Point, Point]], scale: Scale):
+    pxs = []
+
+    for i in edges:
+        points = raster(i, scale)
         pxs.extend(points)
 
     return pxs
