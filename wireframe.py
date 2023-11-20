@@ -61,10 +61,11 @@ def cube(edge: float, res=.5, origin=.5, dist=0) -> Vec3DList:
     last_p3 = None
     last_p4 = None
 
+    # Z Stepper
     step = 1 if res == 0 else (1 / (res * 100))
     end = 0
     while end <= 1:
-        # Simulate 3D into 2D for debug porposes
+        # Simulate 3D into 2D for debug purposes
         virtual = dist * end
 
         curr_z_pos = origin - (half_edge * end)
@@ -92,5 +93,38 @@ def cube(edge: float, res=.5, origin=.5, dist=0) -> Vec3DList:
         last_p4 = m_p4
 
         end += step
+
+    # Y Stepper
+    # step = 1 if res == 0 else (1 / (res * 100))
+    # end = 0
+    # while end <= 1:
+    #     # Simulate 3D into 2D for debug purposes
+    #     virtual = dist * end
+    #
+    #     curr_y_pos = origin + (half_edge * end)
+    #     m_p1 = (origin - half_edge + virtual, curr_y_pos, origin + half_edge)
+    #     m_p2 = (origin + half_edge + virtual, curr_y_pos, origin + half_edge)
+    #
+    #     m_p3 = (origin + half_edge + virtual, curr_y_pos, origin - half_edge)
+    #     m_p4 = (origin - half_edge + virtual, curr_y_pos, origin - half_edge)
+    #
+    #     vector.append((m_p1, m_p2))
+    #     vector.append((m_p2, m_p3))
+    #     vector.append((m_p3, m_p4))
+    #     vector.append((m_p4, m_p1))
+    #
+    #     # Joints
+    #     # if last_p1 is not None:
+    #     #     vector.append((last_p1, m_p1))
+    #     #     vector.append((last_p2, m_p2))
+    #     #     vector.append((last_p3, m_p3))
+    #     #     vector.append((last_p4, m_p4))
+    #     #
+    #     # last_p1 = m_p1
+    #     # last_p2 = m_p2
+    #     # last_p3 = m_p3
+    #     # last_p4 = m_p4
+    #
+    #     end += step
 
     return vector
