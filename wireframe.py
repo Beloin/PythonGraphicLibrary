@@ -41,21 +41,19 @@ class Vec3DList:
         return self._data.__len__()
 
 
-# TODO: Maybe use -1 to 1?
+# TODO: Maybe use -1 to 1? Problem with size while using edge and origin
 # TODO: Create a version where we convert from Object to World.. SO since that, we won't be needding -1 to 1?
-# TODO: Everything here is wrong, we need to have edges from the small blocks, not full with big blocks
-def cube(edge: float, res=.5, origin=.5, dist=0) -> Vec3DList:  # TODO: Use origin as 0...
+# TODO: Everything here is wrong, we need to have edges from the small blocks, not full with big blocks... Do we change it?
+def cube(edge: float, res=.5, dist=0) -> Vec3DList:  # TODO: Use origin as 0...
     """
     Define a cube in its own object coordinates: based on 0.0 to 1.0
     @param edge size of the edge in number between 0 and 1
     @param res resolution used to calculate inbetween the cube small cubes, usually from 0 to 1.
-    @param origin cube origin
     @param dist Param to "Simulate" 3D Cube into a 2D rep.
     """
-    assert 0 < edge <= 1.0
+    assert 0 < edge <= 1.0, "Edge must be between 1 and 0"
     vector = Vec3DList()
-
-    half_edge = edge / 2
+    origin = 1 - edge
 
     last_p1 = None
     last_p2 = None
@@ -63,13 +61,13 @@ def cube(edge: float, res=.5, origin=.5, dist=0) -> Vec3DList:  # TODO: Use orig
     last_p4 = None
 
     # Z Stepper
-    step = 1 if res == 0 else (1 / (res * 100))
+    step = 1 if res == 0 else (1 / (res * 10))
     end = 0
     while end <= 1:
         # Simulate 3D into 2D for debug purposes
         virtual = dist * end
 
-        curr_z_pos = origin - (edge * end)
+        curr_z_pos = origin + (edge * end)
         m_p1 = (origin + virtual, origin + virtual, curr_z_pos)
         m_p2 = (origin + edge + virtual, origin + virtual, curr_z_pos)
 
@@ -96,7 +94,7 @@ def cube(edge: float, res=.5, origin=.5, dist=0) -> Vec3DList:  # TODO: Use orig
         end += step
 
     # Y Stepper
-    step = 1 if res == 0 else (1 / (res * 100))
+    step = 1 if res == 0 else (1 / (res * 10))
     end = 0
     while end <= 1:
         # Simulate 3D into 2D for debug purposes
@@ -106,8 +104,8 @@ def cube(edge: float, res=.5, origin=.5, dist=0) -> Vec3DList:  # TODO: Use orig
         m_p1 = (origin + virtual, curr_y_pos, origin)
         m_p2 = (origin + edge + virtual, curr_y_pos, origin)
 
-        m_p3 = (origin + edge + virtual, curr_y_pos, origin - edge)
-        m_p4 = (origin + virtual, curr_y_pos, origin - edge)
+        m_p3 = (origin + edge + virtual, curr_y_pos, origin + edge)
+        m_p4 = (origin + virtual, curr_y_pos, origin + edge)
 
         vector.append((m_p1, m_p2))
         vector.append((m_p2, m_p3))
@@ -117,7 +115,7 @@ def cube(edge: float, res=.5, origin=.5, dist=0) -> Vec3DList:  # TODO: Use orig
         end += step
 
     # X Stepper
-    step = 1 if res == 0 else (1 / (res * 100))
+    step = 1 if res == 0 else (1 / (res * 10))
     end = 0
     while end <= 1:
         # Simulate 3D into 2D for debug purposes
@@ -127,8 +125,8 @@ def cube(edge: float, res=.5, origin=.5, dist=0) -> Vec3DList:  # TODO: Use orig
         m_p1 = (curr_x_pos, origin + virtual, origin)
         m_p2 = (curr_x_pos, origin + edge + virtual, origin)
 
-        m_p3 = (curr_x_pos, origin + edge + virtual, origin - edge)
-        m_p4 = (curr_x_pos, origin + virtual, origin - edge)
+        m_p3 = (curr_x_pos, origin + edge + virtual, origin + edge)
+        m_p4 = (curr_x_pos, origin + virtual, origin + edge)
 
         vector.append((m_p1, m_p2))
         vector.append((m_p2, m_p3))
@@ -138,3 +136,7 @@ def cube(edge: float, res=.5, origin=.5, dist=0) -> Vec3DList:  # TODO: Use orig
         end += step
 
     return vector
+
+
+def sphere(radius: float):
+    pass
