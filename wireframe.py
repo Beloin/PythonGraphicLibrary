@@ -43,7 +43,8 @@ class Vec3DList:
 
 # TODO: Maybe use -1 to 1?
 # TODO: Create a version where we convert from Object to World.. SO since that, we won't be needding -1 to 1?
-def cube(edge: float, res=.5, origin=.5, dist=0) -> Vec3DList:
+# TODO: Everything here is wrong, we need to have edges from the small blocks, not full with big blocks
+def cube(edge: float, res=.5, origin=.5, dist=0) -> Vec3DList:  # TODO: Use origin as 0...
     """
     Define a cube in its own object coordinates: based on 0.0 to 1.0
     @param edge size of the edge in number between 0 and 1
@@ -68,12 +69,12 @@ def cube(edge: float, res=.5, origin=.5, dist=0) -> Vec3DList:
         # Simulate 3D into 2D for debug purposes
         virtual = dist * end
 
-        curr_z_pos = origin - (half_edge * end)
-        m_p1 = (origin - half_edge + virtual, origin - half_edge + virtual, curr_z_pos)
-        m_p2 = (origin + half_edge + virtual, origin - half_edge + virtual, curr_z_pos)
+        curr_z_pos = origin - (edge * end)
+        m_p1 = (origin + virtual, origin + virtual, curr_z_pos)
+        m_p2 = (origin + edge + virtual, origin + virtual, curr_z_pos)
 
-        m_p4 = (origin - half_edge + virtual, origin + half_edge + virtual, curr_z_pos)
-        m_p3 = (origin + half_edge + virtual, origin + half_edge + virtual, curr_z_pos)
+        m_p4 = (origin + virtual, origin + edge + virtual, curr_z_pos)
+        m_p3 = (origin + edge + virtual, origin + edge + virtual, curr_z_pos)
 
         vector.append((m_p1, m_p2))
         vector.append((m_p2, m_p3))
@@ -95,36 +96,45 @@ def cube(edge: float, res=.5, origin=.5, dist=0) -> Vec3DList:
         end += step
 
     # Y Stepper
-    # step = 1 if res == 0 else (1 / (res * 100))
-    # end = 0
-    # while end <= 1:
-    #     # Simulate 3D into 2D for debug purposes
-    #     virtual = dist * end
-    #
-    #     curr_y_pos = origin + (half_edge * end)
-    #     m_p1 = (origin - half_edge + virtual, curr_y_pos, origin + half_edge)
-    #     m_p2 = (origin + half_edge + virtual, curr_y_pos, origin + half_edge)
-    #
-    #     m_p3 = (origin + half_edge + virtual, curr_y_pos, origin - half_edge)
-    #     m_p4 = (origin - half_edge + virtual, curr_y_pos, origin - half_edge)
-    #
-    #     vector.append((m_p1, m_p2))
-    #     vector.append((m_p2, m_p3))
-    #     vector.append((m_p3, m_p4))
-    #     vector.append((m_p4, m_p1))
-    #
-    #     # Joints
-    #     # if last_p1 is not None:
-    #     #     vector.append((last_p1, m_p1))
-    #     #     vector.append((last_p2, m_p2))
-    #     #     vector.append((last_p3, m_p3))
-    #     #     vector.append((last_p4, m_p4))
-    #     #
-    #     # last_p1 = m_p1
-    #     # last_p2 = m_p2
-    #     # last_p3 = m_p3
-    #     # last_p4 = m_p4
-    #
-    #     end += step
+    step = 1 if res == 0 else (1 / (res * 100))
+    end = 0
+    while end <= 1:
+        # Simulate 3D into 2D for debug purposes
+        virtual = dist * end
+
+        curr_y_pos = origin + (edge * end)
+        m_p1 = (origin + virtual, curr_y_pos, origin)
+        m_p2 = (origin + edge + virtual, curr_y_pos, origin)
+
+        m_p3 = (origin + edge + virtual, curr_y_pos, origin - edge)
+        m_p4 = (origin + virtual, curr_y_pos, origin - edge)
+
+        vector.append((m_p1, m_p2))
+        vector.append((m_p2, m_p3))
+        vector.append((m_p3, m_p4))
+        vector.append((m_p4, m_p1))
+
+        end += step
+
+    # X Stepper
+    step = 1 if res == 0 else (1 / (res * 100))
+    end = 0
+    while end <= 1:
+        # Simulate 3D into 2D for debug purposes
+        virtual = dist * end
+
+        curr_x_pos = origin + (edge * end)
+        m_p1 = (curr_x_pos, origin + virtual, origin)
+        m_p2 = (curr_x_pos, origin + edge + virtual, origin)
+
+        m_p3 = (curr_x_pos, origin + edge + virtual, origin - edge)
+        m_p4 = (curr_x_pos, origin + virtual, origin - edge)
+
+        vector.append((m_p1, m_p2))
+        vector.append((m_p2, m_p3))
+        vector.append((m_p3, m_p4))
+        vector.append((m_p4, m_p1))
+
+        end += step
 
     return vector
