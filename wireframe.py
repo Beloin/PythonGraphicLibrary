@@ -146,13 +146,31 @@ def sphere(radius: float, res=.5, circle_res=.5) -> Vec3DList:
     # 1. Generate small circle
     # 2. Generate points
     # 3. Append-it to vector list
+    assert 0 < radius <= 1.0, "radius must be between 1 and 0"
     vector = Vec3DList()
 
     origin = 1 - radius
-    angle_step = 360 / circle_res
+    angle_step = 360 / (circle_res * 100)
 
+    # Z Stepper
     step = 1 if res == 0 else (1 / (res * 10))
-    end = 0
+    end = 1
+    while end <= 1:
+        cur_z = origin  # TODO: Define Z
+        last_pt = None
+        cur_angle = 0
+        while cur_angle <= 360:
+            x, y = get_circle_point(radius, cur_angle)
+            x += origin
+            y += origin
+
+            if last_pt is not None:
+                vector.append((last_pt, (x, y, cur_z)))
+
+            last_pt = (x, y, cur_z)
+            cur_angle += angle_step
+
+        end += step
 
     return vector
 
