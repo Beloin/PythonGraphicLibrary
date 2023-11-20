@@ -154,9 +154,11 @@ def sphere(radius: float, res=.5, circle_res=.5) -> Vec3DList:
 
     # Z Stepper
     step = 1 if res == 0 else (1 / (res * 10))
-    end = 1
+    end = 0
     while end <= 1:
-        cur_z = origin  # TODO: Define Z
+        cur_z = origin + (end * step)  # TODO: Define Z
+        radius = radius * (1 - math.fabs(end - .5))  # end = 0.5 radius == radius
+
         last_pt = None
         cur_angle = 0
         while cur_angle <= 360:
