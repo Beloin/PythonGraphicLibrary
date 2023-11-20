@@ -1,5 +1,5 @@
 import copy
-
+import math
 from types_3d import *
 
 
@@ -138,5 +138,33 @@ def cube(edge: float, res=.5, dist=0) -> Vec3DList:  # TODO: Use origin as 0...
     return vector
 
 
-def sphere(radius: float):
-    pass
+def sphere(radius: float, res=.5, circle_res=.5) -> Vec3DList:
+    # C = 2*pi*R
+    # sen(x) = CO/H
+    # H = R
+
+    # 1. Generate small circle
+    # 2. Generate points
+    # 3. Append-it to vector list
+    vector = Vec3DList()
+
+    origin = 1 - radius
+    angle_step = 360 / circle_res
+
+    step = 1 if res == 0 else (1 / (res * 10))
+    end = 0
+
+    return vector
+
+
+def get_circle_point(radius, angle):
+    """
+    Gets circle point based on circle origin with value 0
+    """
+    # sen(x) = CO/H
+    # cos(x) = CA/H
+    sin = math.sin(math.radians(angle))
+    cos = math.cos(math.radians(angle))
+    y = radius * sin
+    x = radius * cos
+    return x, y
