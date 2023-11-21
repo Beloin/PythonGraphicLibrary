@@ -15,9 +15,12 @@ class Vec3DList:
         ]
     """
     _data: list[Vector3D]
+    _sep: int
 
-    def __init__(self, data=None):
+    def __init__(self, data=None, sep=None):
         self._data = [] if data is None else data
+        if sep is not None:
+            self._sep = sep
 
     def __getitem__(self, item: int):
         return self._data[item]
@@ -40,6 +43,9 @@ class Vec3DList:
     def __len__(self):
         return self._data.__len__()
 
+    def sep(self):
+        return self._sep
+
 
 # TODO: Maybe use -1 to 1? Problem with size while using edge and origin
 # TODO: Create a version where we convert from Object to World.. SO since that, we won't be needding -1 to 1?
@@ -52,7 +58,7 @@ def cube(edge: float, res=.5, dist=0) -> Vec3DList:  # TODO: Use origin as 0...
     @param dist Param to "Simulate" 3D Cube into a 2D rep.
     """
     assert 0 < edge <= 1.0, "Edge must be between 1 and 0"
-    vector = Vec3DList()
+    vector = Vec3DList(sep=4)
     origin = 1 - edge
 
     last_p1 = None
@@ -147,22 +153,24 @@ def sphere(radius: float, res=.5, circle_res=.5) -> Vec3DList:
     # 2. Generate points
     # 3. Append-it to vector list
     assert 0 < radius <= 1.0, "radius must be between 1 and 0"
-    vector = Vec3DList()
 
     origin = 1 - radius
-    angle_step = 360 / (circle_res * 100)
+    amount = circle_res * 100
+    angle_step = 360 / amount
+
+    vector = Vec3DList(sep=amount)
 
     # Z Stepper
-    step = 1 if res == 0 else (1 / (res * 10))
+    step = 1 if res == 0 else (1 / (res * 100))
     end = 0
     while end <= 1:
-        cur_z = origin + (end * step)  # TODO: Define Z
-        radius = radius * (1 - math.fabs(end - .5))  # end = 0.5 radius == radius
+        cur_z = origin + (end * radius)  # TODO: This is not generating a full circle
+        n_radius = radius * (1 - math.fabs(end - .5))
 
         last_pt = None
         cur_angle = 0
         while cur_angle <= 360:
-            x, y = get_circle_point(radius, cur_angle)
+            x, y = get_circle_point(n_radius, cur_angle)
             x += origin
             y += origin
 
