@@ -28,3 +28,4 @@ In this file we have the basics on plotting 2D images, converting primitives int
 1. [3D Modeling (PT-BR)](https://www.inf.pucrs.br/~pinho/CG/Aulas/Modelagem/Modelagem3D.htm)
 1. [3D Representation (PT-BR), Page 26-31, 33-40](https://www.inf.pucrs.br/~smusse/CG/PDF2013_2/Representacao.pdf)
 1. [Project Points (EN)](https://www.baeldung.com/cs/3d-point-2d-plane)
+1. [C](http://profs.ic.uff.br/~anselmo/cursos/CGI/slidesGrad/CG_aula11(projecoesecameras).pdf)

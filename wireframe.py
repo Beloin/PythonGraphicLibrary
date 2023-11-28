@@ -163,9 +163,11 @@ def sphere(radius: float, res=.5, circle_res=.5) -> Vec3DList:
     # Z Stepper
     step = 1 if res == 0 else (1 / (res * 100))
     end = 0
-    while end <= 1:
-        cur_z = origin + (end * radius)  # TODO: This is not generating a full circle
-        n_radius = radius * (1 - math.fabs(end - .5))
+    while end < 1:
+        circle_pt = get_circle_point(radius, 360*end)
+
+        cur_z = origin + circle_pt[1]
+        n_radius = circle_pt[0]
 
         last_pt = None
         cur_angle = 0
@@ -183,6 +185,16 @@ def sphere(radius: float, res=.5, circle_res=.5) -> Vec3DList:
         end += step
 
     return vector
+
+
+def convertdc_angle(i: int):
+    # i = [0, 1]
+    # To = [0, 360]
+    # 1 - 360
+    # i - X
+    # x = i*360
+
+    return i * 360
 
 
 def get_circle_point(radius, angle):
