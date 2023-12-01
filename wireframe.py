@@ -182,6 +182,19 @@ def sphere(radius: float, res=.5, circle_res=.5) -> Vec3DList:
             last_pt = (x, y, cur_z)
             cur_angle += angle_step
 
+        last_pt = None
+        cur_angle = 0
+        while cur_angle <= 360:
+            x, y = get_circle_point(n_radius, cur_angle)
+            x += origin
+            y += origin
+
+            if last_pt is not None:
+                vector.append((last_pt, (cur_z, x, y)))
+
+            last_pt = (cur_z, x, y)
+            cur_angle += angle_step
+
         end += step
 
     return vector
