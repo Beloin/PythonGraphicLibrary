@@ -63,3 +63,7 @@ def rotate(point: Point3D, x_a=None, y_a=None, z_a=None) -> Point3D:
 
 def translate(point: Point3D, t: Point3D) -> Point3D:
     return point[0] + t[0], point[1] + t[1], point[2] + t[2]
+
+
+def scale(point: Point3D, scale: Point3D) -> Point3D:
+    return point[0] * scale[0], point[1] * scale[1], point[2] * scale[2]
