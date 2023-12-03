@@ -35,15 +35,31 @@ def get_rotation_mx_dpX(angle):
     return x1_d
 
 
-def rotate(point: Point3D, x_a=None, y_a=None, z_a=None):
-    res_pt = point
-
-    # TODO: Implement multiplication
+def rotate(point: Point3D, x_a=None, y_a=None, z_a=None) -> Point3D:
     if x_a:
-        res_pt * get_rotation_mx_dpX(x_a)
+        angle = math.radians(x_a)
+        sin = math.sin(angle)
+        cos = math.cos(angle)
+        return (point[0],
+                point[1] * cos - point[2] * sin,
+                point[1] * sin + point[2] * cos)
 
     if y_a:
-        res_pt * get_rotation_mx_dpX(y_a)
+        angle = math.radians(y_a)
+        sin = math.sin(angle)
+        cos = math.cos(angle)
+        return (point[2] * sin + point[0] * cos,
+                point[1],
+                point[1] * cos - point[0] * sin)
 
     if z_a:
-        res_pt * get_rotation_mx_dpX(z_a)
+        angle = math.radians(z_a)
+        sin = math.sin(angle)
+        cos = math.cos(angle)
+        return (point[0] * cos - point[1] * sin,
+                point[0] * sin + point[1] * cos,
+                point[2])
+
+
+def translate(point: Point3D, t: Point3D) -> Point3D:
+    return point[0] + t[0], point[1] + t[1], point[2] + t[2]

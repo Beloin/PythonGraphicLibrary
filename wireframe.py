@@ -164,7 +164,7 @@ def sphere(radius: float, res=.5, circle_res=.5) -> Vec3DList:
     step = 1 if res == 0 else (1 / (res * 100))
     end = 0
     while end < 1:
-        circle_pt = get_circle_point(radius, 360*end)
+        circle_pt = __get_circle_point(radius, 360 * end)
 
         cur_z = origin + circle_pt[1]
         n_radius = circle_pt[0]
@@ -172,7 +172,7 @@ def sphere(radius: float, res=.5, circle_res=.5) -> Vec3DList:
         last_pt = None
         cur_angle = 0
         while cur_angle <= 360:
-            x, y = get_circle_point(n_radius, cur_angle)
+            x, y = __get_circle_point(n_radius, cur_angle)
             x += origin
             y += origin
 
@@ -185,7 +185,7 @@ def sphere(radius: float, res=.5, circle_res=.5) -> Vec3DList:
         last_pt = None
         cur_angle = 0
         while cur_angle <= 360:
-            x, y = get_circle_point(n_radius, cur_angle)
+            x, y = __get_circle_point(n_radius, cur_angle)
             x += origin
             y += origin
 
@@ -200,17 +200,7 @@ def sphere(radius: float, res=.5, circle_res=.5) -> Vec3DList:
     return vector
 
 
-def convertdc_angle(i: int):
-    # i = [0, 1]
-    # To = [0, 360]
-    # 1 - 360
-    # i - X
-    # x = i*360
-
-    return i * 360
-
-
-def get_circle_point(radius, angle):
+def __get_circle_point(radius, angle):
     """
     Gets circle point based on circle origin with value 0
     """
@@ -221,3 +211,29 @@ def get_circle_point(radius, angle):
     y = radius * sin
     x = radius * cos
     return x, y
+
+
+def cone(radius: float, res=.5, circle_res=.5):
+    assert 0 < radius <= 1.0, "radius must be between 1 and 0"
+
+    origin = 1 - radius
+    amount = circle_res * 100
+    angle_step = 360 / amount
+
+    vector = Vec3DList(sep=amount)
+
+    # First circle
+    last_pt = None
+    cur_angle = 0
+    while cur_angle <= 360:
+        x, y = __get_circle_point(radius, cur_angle)
+        x += origin
+        y += origin
+
+        if last_pt is not None:
+            vector.append((last_pt, (x, y, origin)))
+
+        last_pt = (x, y, origin)
+        cur_angle += angle_step
+
+    # TODO: Create a triangle and rotate it to make the cone
