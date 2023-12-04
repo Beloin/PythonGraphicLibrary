@@ -30,4 +30,3 @@ def point_to_camera(p: Point3D, camera: Coord3D, eye: Point3D) -> Point3D:
 
     return px, py, pz
 
-# TODO: Work with Perspective Porjection
