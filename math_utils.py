@@ -3,6 +3,10 @@ import math
 from types_3d import Point3D
 
 
+def minus(a: Point3D, b: Point3D) -> Point3D:
+    return a[0] - b[0], a[1] - b[1], a[2] - b[2]
+
+
 def project(p: Point3D, n: Point3D) -> Point3D:
     a = p[0] * n[0] + p[1] * n[1] + p[2] * n[2]
     b = n[0] * n[0] + n[1] * n[1] + n[2] * n[2]
