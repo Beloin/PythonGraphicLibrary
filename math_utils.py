@@ -25,3 +25,7 @@ def vetorial_product(u: Point3D, n: Point3D) -> Point3D:
     j = u[2] * n[0] - u[0] * n[2]
     k = u[0] * n[1] - u[1] * n[0]
     return i, j, k
+
+
+def scale(edges: ):
+    pass
