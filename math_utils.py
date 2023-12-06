@@ -1,6 +1,6 @@
 import math
 
-from types_3d import Point3D
+from types_3d import Point3D, Scale
 
 
 def minus(a: Point3D, b: Point3D) -> Point3D:
@@ -25,3 +25,10 @@ def vetorial_product(u: Point3D, n: Point3D) -> Point3D:
     j = u[2] * n[0] - u[0] * n[2]
     k = u[0] * n[1] - u[1] * n[0]
     return i, j, k
+
+
+def scale_interval(v: float, old_scale: Scale, new_scale: Scale):
+    vs = (v - old_scale[0]) / (old_scale[1] - old_scale[0])
+    vs *= new_scale[1] - new_scale[0]
+    vs += new_scale[0]
+    return vs

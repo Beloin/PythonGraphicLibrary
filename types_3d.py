@@ -11,6 +11,7 @@ Vector3D = tuple[Point3D, Point3D]
 Vector2D = tuple[Point2D, Point2D]
 
 Size = tuple[int, int]
+Scale = tuple[int, int]
 
 X = 0
 Y = 1
