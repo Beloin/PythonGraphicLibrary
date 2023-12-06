@@ -49,8 +49,12 @@ def edges_to_camera(edges: Vec3DList, camera: Coord3D, eye: Point3D):
     return new_edges
 
 
-if __name__ == '__main__':
+def main():
     at = (0, 0, 0)
     eye = (0, 0, 1)
     camera = get_camera(at, eye)
     print(camera)
+
+
+if __name__ == '__main__':
+    main()
