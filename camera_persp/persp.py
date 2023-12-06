@@ -21,3 +21,7 @@ def perspective_edges(edges: Vec3DList, eye: Point3D, window: Size) -> list[Vect
         vec.append((s, e))
 
     return vec
+
+
+def strong_perspective_projection(p: Point3D, eye: Point3D, display: Point3D) -> Point2D:
+    bx =

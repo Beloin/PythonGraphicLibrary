@@ -85,3 +85,16 @@ def scale_interval(edges: Vec3DList, new_scale: Scale, old_scale=(0, 1)):
         new_edges.append((newv1, newv2))  # type: ignore
 
     return new_edges
+
+
+def scale_interval_arr(edges: list[Vector2D], new_scale: Scale, old_scale=(0, 1)):
+    new_edges = []
+    for vec2d in edges:
+        v1 = vec2d[0]
+        v2 = vec2d[1]
+        newv1 = tuple(map(lambda x: math_utils.scale_interval(x, old_scale, new_scale), v1))
+        newv2 = tuple(map(lambda x: math_utils.scale_interval(x, old_scale, new_scale), v2))
+
+        new_edges.append((newv1, newv2))  # type: ignore
+
+    return new_edges
