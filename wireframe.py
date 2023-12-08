@@ -16,9 +16,13 @@ class Vec3DList:
     """
     _data: list[Vector3D]
     _sep: int
+    _center: Point3D
+    _color: str
 
-    def __init__(self, data=None, sep=None):
+    def __init__(self, data=None, sep=None, center=None, color=None):
         self._data = [] if data is None else data
+        self._center = [] if center is None else center
+        self._color = [] if color is None else color
         if sep is not None:
             self._sep = sep
 
