@@ -17,7 +17,7 @@ def rotate(point: Point3D, rotate_p: Point3D) -> Point3D:
                  point[1] * cos - point[2] * sin,
                  point[1] * sin + point[2] * cos)
 
-    if y_a:
+    if y_a: # TODO: Rotation in Y axis is too wierd
         angle = math.radians(y_a)
         sin = math.sin(angle)
         cos = math.cos(angle)
