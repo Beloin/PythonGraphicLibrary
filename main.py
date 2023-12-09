@@ -4,12 +4,13 @@ from time import sleep
 import matplotlib.pyplot as plt
 import matplotlib
 
-import random
-
 import solids.solids as solids
 
 import transformation
+from utils_3d import draw_coordinate_system
 from wireframe import Vec3DList
+
+from camera_persp import camera
 
 matplotlib.use('qtagg')
 
@@ -21,16 +22,26 @@ run = True
 
 
 def configure():
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Z')
+
     ax.set_xlim(-10, 10)
     ax.set_ylim(-10, 10)
     ax.set_zlim(-10, 10)
     ax.set_aspect("equal")
 
+    draw_coordinate_system(ax, size=10)
+
 
 def main(solid_list):
     # World is -10 to 10
-    at = (0, 0, 0)
-    eye = (5, 0, 5)
+    at = (5, 5, 5)
+    eye = (5, -5, 5)
+    cam = camera.get_camera(at, eye)
+
+    eye_rep = solid.sphere2(color="red")  # 0 -> 1
+    eye_rep = transformation.translate_edges(eye_rep, eye)
 
     for item in solid_list:
         item.update(transformation.scale_solid(item, (2, 2, 2)))
@@ -39,9 +50,13 @@ def main(solid_list):
 
         ax.clear()
         configure()
+        # Eye coordinate System
+        # draw_coordinate_system(ax, cam[0], cam[1], cam[2], size=5)
         for item in solid_list:
             item.update(transformation.rotate_solid(item, (10, 0, 10)))
             plot_axis(item)
+
+        plot_axis(eye_rep)
 
         fig.canvas.draw()
         fig.canvas.flush_events()
@@ -60,7 +75,7 @@ def plot_axis(edges: Vec3DList):
 
 if __name__ == "__main__":
     cube = solid.cube2(t=2)  # 0 -> 1
-    sphere = solid.sphere2(t=10, color="red")  # 0 -> 1
+    sphere = solid.sphere2(t=10, color="magenta")  # 0 -> 1
     cylinder = solid.cylinder2(t=10, color="orange")  # 0 -> 1
 
     cube = transformation.translate_edges(cube, (7, 7, 7))
