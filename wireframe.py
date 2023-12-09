@@ -59,11 +59,14 @@ class Vec3DList:
     def color(self):
         return self._color
 
+    def update(self, other: 'Vec3DList'):
+        self._data = other._data
+        self._center = other._center
+        self._color = other._color
+        self._color = other._color
 
-# TODO: Maybe use -1 to 1? Problem with size while using edge and origin
-# TODO: Create a version where we convert from Object to World.. SO since that, we won't be needding -1 to 1?
-# TODO: Everything here is wrong, we need to have edges from the small blocks, not full with big blocks... Do we change it?
-def cube(edge: float, res=.5, dist=0) -> Vec3DList:  # TODO: Use origin as 0...
+
+def cube(edge: float, res=.5, dist=0) -> Vec3DList:
     """
     Define a cube in its own object coordinates: based on 0.0 to 1.0
     @param edge size of the edge in number between 0 and 1

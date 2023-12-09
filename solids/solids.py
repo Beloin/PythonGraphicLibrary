@@ -27,23 +27,21 @@ class Solid:
 
         plt.show()
 
-    def sphere2(self, radius=1, t=20):
+    def sphere2(self, radius=1, t=20, color="black"):
         theta1 = linspace(2 * np.pi, t)
         theta2 = linspace(np.pi, t)
         u, v = mesh_grid(theta1, theta2)
 
         x = radius * np.cos(u) * np.sin(v)
         y = radius * np.sin(u) * np.sin(v)
-        z = radius * 2 * np.cos(v)
+        z = radius * 1 * np.cos(v)
 
         vectors = []
         addvec(vectors, t, x, y, z)
 
         center = (0.0, 0.0, 0.0)
 
-        vector3d = Vec3DList(vectors, t, center, "")
-
-        # vec2plot(vector3d.raw())
+        vector3d = Vec3DList(vectors, t, center, color)
 
         return vector3d
 
@@ -78,7 +76,7 @@ class Solid:
 
         plt.show()
 
-    def cube2(self, size=1, t=10):
+    def cube2(self, size=1, t=10, color="black"):
         theta = linspace(size, t)
         u, v = mesh_grid(theta, theta)
 
@@ -107,7 +105,7 @@ class Solid:
 
         center = (size / 2, size / 2, size / 2)
 
-        vector3d = Vec3DList(vectors, 4, center, "")
+        vector3d = Vec3DList(vectors, 4, center, color)
 
         return vector3d
 
