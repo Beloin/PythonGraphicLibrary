@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from aux import linspace, plot, mesh_grid, vec2plot, addvec
+from solids.aux import linspace, plot, mesh_grid, addvec
 from wireframe import Vec3DList
 
 
@@ -108,7 +108,6 @@ class Solid:
         center = (size / 2, size / 2, size / 2)
 
         vector3d = Vec3DList(vectors, 4, center, "")
-        # vec2plot(vector3d.raw())
 
         return vector3d
 

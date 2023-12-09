@@ -50,6 +50,15 @@ class Vec3DList:
     def sep(self):
         return self._sep
 
+    def center(self, new_center=None):
+        if new_center:
+            self._center = new_center
+
+        return self._center
+
+    def color(self):
+        return self._color
+
 
 # TODO: Maybe use -1 to 1? Problem with size while using edge and origin
 # TODO: Create a version where we convert from Object to World.. SO since that, we won't be needding -1 to 1?

@@ -1,3 +1,5 @@
+import math
+
 from types_3d import Point3D, Size, Z, Point2D, X, Y, Vector2D, Scale
 from wireframe import Vec3DList
 
@@ -28,12 +30,16 @@ def strong_projection(p: Point3D, eye: Point3D, display_pos: Point3D, size: Scal
     y = p[Y] - eye[Y]
     z = p[Z] - eye[Z]
 
-    dx = eye[Y]*()
+    dx = eye[Y] * ()
 
     bx = 0
     by = 0
 
     return bx, by
+
+
+def strong_proj(up, close):
+    angle = math.atan(up / close)
 
 
 def strongperspective_edges(edges: Vec3DList, eye: Point3D, display: Point3D, window: Size) -> list[Vector2D]:
