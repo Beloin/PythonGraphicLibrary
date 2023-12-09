@@ -46,6 +46,7 @@ def main(solid_list):
     for item in solid_list:
         item.update(transformation.scale_solid(item, (2, 2, 2)))
 
+    print(cam)
     while run:
 
         ax.clear()
@@ -74,7 +75,7 @@ def plot_axis(edges: Vec3DList):
 
 
 if __name__ == "__main__":
-    cube = solid.cube2(t=2)  # 0 -> 1
+    cube = solid.cube2(t=5)  # 0 -> 1
     sphere = solid.sphere2(t=10, color="magenta")  # 0 -> 1
     cylinder = solid.cylinder2(t=10, color="orange")  # 0 -> 1
 

@@ -19,6 +19,7 @@ class Arrow3D(FancyArrowPatch):
 def draw_coordinate_system(ax, x=0, y=0, z=0, size=1):
     arrow_prop_dict = dict(mutation_scale=20, arrowstyle='->', shrinkA=0, shrinkB=0)
 
+    # TODO: Test this
     a = Arrow3D([x, size], [y, 0], [z, 0], **arrow_prop_dict, color='r')
     ax.add_artist(a)
     a = Arrow3D([x, 0], [y, size], [z, 0], **arrow_prop_dict, color='b')
