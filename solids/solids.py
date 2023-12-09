@@ -147,11 +147,11 @@ class Solid:
 
         plt.show()
 
-    def cylinder2(self, radius=1, t=20):
-
+    def cylinder2(self, radius=1, t=20, color="black"):
+        radius = radius / 2
         height = 2 * radius
 
-        u = linspace(2 * np.pi * radius, t)
+        u = linspace(2 * np.pi, t)
         v = linspace(height, t)
 
         theta, z = mesh_grid(u, v)
@@ -172,11 +172,9 @@ class Solid:
 
             vectors.append(((x_line[0], y_line[0], z_line[0]), (x_line[1], y_line[1], z_line[1])))
 
-        center = (0.0, radius, 0.0)
+        center = (0, radius / 2, 0)
 
-        vector3d = Vec3DList(vectors, t, center, "")
-
-        # vec2plot(vector3d.raw())
+        vector3d = Vec3DList(vectors, t, center, color)
 
         return vector3d
 
@@ -214,8 +212,8 @@ class Solid:
 
         plt.show()
 
-    def cone2(self, radius=1, t=20):
-
+    def cone2(self, radius=1, t=20, color="black"):
+        radius = radius / 3
         height = 3 * radius
 
         theta = linspace(2 * np.pi, t)
@@ -237,11 +235,9 @@ class Solid:
 
             vectors.append(((x_line[0], y_line[0], z_line[0]), (x_line[1], y_line[1], z_line[1])))
 
-        center = (0.0, radius * 1.5, 0.0)
+        center = (0.0, 0, radius)
 
-        vector3d = Vec3DList(vectors, t, center, "")
-
-        # vec2plot(vector3d.raw())
+        vector3d = Vec3DList(vectors, t, center, color)
 
         return vector3d
 
@@ -261,7 +257,7 @@ class Solid:
 
         plt.show()
 
-    def toroide2(self, R=1, r=.7, t=20):
+    def toroide2(self, R=1, r=.7, t=20, color='black'):
         theta = linspace(2 * np.pi, t)
         u, v = mesh_grid(theta, theta)
 
@@ -274,8 +270,6 @@ class Solid:
 
         center = (0.0, 0.0, 0.0)
 
-        vector3d = Vec3DList(vectors, t, center, "")
-
-        # vec2plot(vector3d.raw())
+        vector3d = Vec3DList(vectors, t, center, color)
 
         return vector3d
