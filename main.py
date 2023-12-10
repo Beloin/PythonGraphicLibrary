@@ -19,7 +19,7 @@ solid = solids.Solid()
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-world2cam = False
+world2cam = True
 
 
 def configure():
