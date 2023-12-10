@@ -7,7 +7,7 @@ import matplotlib
 import solids.solids as solids
 
 import transformation
-from utils_3d import draw_coordinate_system
+from utils_3d import draw_coordinate_system, draw_coordinate_system
 from wireframe import Vec3DList
 
 from camera_persp import camera
@@ -52,7 +52,7 @@ def main(solid_list):
         ax.clear()
         configure()
         # Eye coordinate System
-        # draw_coordinate_system(ax, cam[0], cam[1], cam[2], size=5)
+        draw_coordinate_system(ax, eye, size=5, txt="eye")
         for item in solid_list:
             item.update(transformation.rotate_solid(item, (10, 0, 10)))
             plot_axis(item)

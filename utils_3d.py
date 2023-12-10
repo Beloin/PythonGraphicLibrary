@@ -2,6 +2,8 @@ import numpy as np
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d
 
+from types_3d import Point3D, Vector3D, X, Y, Z
+
 
 class Arrow3D(FancyArrowPatch):
     def __init__(self, xs, ys, zs, *args, **kwargs):
@@ -16,19 +18,20 @@ class Arrow3D(FancyArrowPatch):
         return np.min(zs)
 
 
-def draw_coordinate_system(ax, x=0, y=0, z=0, size=1):
+def draw_coordinate_system(ax, eye=None, size=1, txt="0"):
     arrow_prop_dict = dict(mutation_scale=20, arrowstyle='->', shrinkA=0, shrinkB=0)
 
-    # TODO: Test this
-    a = Arrow3D([x, size], [y, 0], [z, 0], **arrow_prop_dict, color='r')
+    if not eye: eye = (0, 0, 0)
+
+    a = Arrow3D([eye[X], eye[X] + size], [eye[Y], eye[Y]], [eye[Z], eye[Z]], **arrow_prop_dict, color='r')
     ax.add_artist(a)
-    a = Arrow3D([x, 0], [y, size], [z, 0], **arrow_prop_dict, color='b')
+    a = Arrow3D([eye[X], eye[X]], [eye[Y], eye[Y] + size], [eye[Z], eye[Z]], **arrow_prop_dict, color='b')
     ax.add_artist(a)
-    a = Arrow3D([x, 0], [y, 0], [z, size], **arrow_prop_dict, color='g')
+    a = Arrow3D([eye[X], eye[X]], [eye[Y], eye[Y]], [eye[Z], eye[Z] + size], **arrow_prop_dict, color='g')
     ax.add_artist(a)
 
     # Give them a name:
-    ax.text(0.0, 0.0, -0.1, r'$0$')
-    ax.text(size + .1, 0, 0, r'$x$')
-    ax.text(0, size + .1, 0, r'$y$')
-    ax.text(0, 0, size + .1, r'$z$')
+    ax.text(*eye, f'${txt}$')
+    ax.text(eye[X] + size + .1, eye[Y], eye[Z], r'$x$')
+    ax.text(eye[X], eye[Y] + size + .1, eye[Z], r'$y$')
+    ax.text(eye[X], eye[Y], eye[Z] + size + .1, r'$z$')
