@@ -19,6 +19,7 @@ solid = solids.Solid()
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 run = True
+world2cam = True
 
 
 def configure():
@@ -31,13 +32,14 @@ def configure():
     ax.set_zlim(-10, 10)
     ax.set_aspect("equal")
 
-    draw_coordinate_system(ax, size=10)
+    if not world2cam:
+        draw_coordinate_system(ax, size=10)
 
 
 def main(solid_list):
     # World is -10 to 10
     at = (5, 5, 5)
-    eye = (5, -5, 5)
+    eye = (4, -4, 4)
     cam = camera.get_camera(at, eye)
 
     eye_rep = solid.sphere2(color="red")  # 0 -> 1
@@ -46,7 +48,14 @@ def main(solid_list):
     for item in solid_list:
         item.update(transformation.scale_solid(item, (2, 2, 2)))
 
-    print(cam)
+    if world2cam:
+        to_camera = camera.point_to_camera((0, 0, 0), cam, eye)
+        world_pt = solid.sphere2(color="#db3265")  # 0 -> 1
+        world_pt = transformation.translate_edges(world_pt, to_camera)
+
+        for item in solid_list:
+            item.update(camera.edges_to_camera(item, cam, eye))
+
     while run:
 
         ax.clear()
@@ -56,6 +65,11 @@ def main(solid_list):
         for item in solid_list:
             item.update(transformation.rotate_solid(item, (10, 0, 10)))
             plot_axis(item)
+
+            if world2cam:
+                # Draw New World transformation
+                plot_axis(world_pt)
+                draw_coordinate_system(ax, to_camera, size=5, txt="World")
 
         plot_axis(eye_rep)
 

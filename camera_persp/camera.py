@@ -20,7 +20,7 @@ def get_camera(at: Point3D, eye: Point3D) -> Coord3D:
     u = math_utils.normalize(u)
     v = math_utils.vetorial_product(u, n)
 
-    return u, v, n  # TODO: Check which is better...
+    return v, u, n  # TODO: Check which is better...
 
 
 def point_to_camera(p: Point3D, camera: Coord3D, eye: Point3D) -> Point3D:
@@ -29,22 +29,37 @@ def point_to_camera(p: Point3D, camera: Coord3D, eye: Point3D) -> Point3D:
     #  | U1 U2 U3 0 |   *   | 0  1  0 E2 |
     #  | N1 N2 N3 0 |       | 0  0  1 E3 |
     #  | 0  0  0  1 |       | 0  0  0  1 |
-    a1 = -eye[0] * camera[0][0] - eye[1] * camera[0][1] - eye[2] * camera[0][2]
-    a2 = -eye[0] * camera[1][0] - eye[1] * camera[1][1] - eye[2] * camera[1][2]
-    a3 = -eye[0] * camera[2][0] - eye[1] * camera[2][1] - eye[2] * camera[2][2]
-    px = camera[0][0] * p[0] + camera[0][1] * p[1] + camera[0][2] * p[2] + a1
-    py = camera[1][0] * p[0] + camera[1][1] * p[1] + camera[1][2] * p[2] + a2
-    pz = camera[2][0] * p[0] + camera[2][1] * p[1] + camera[2][2] * p[2] + a3
+    vx = camera[0][0]
+    vy = camera[0][1]
+    vz = camera[0][2]
+
+    ux = camera[1][0]
+    uy = camera[1][1]
+    uz = camera[1][2]
+
+    nx = camera[2][0]
+    ny = camera[2][1]
+    nz = camera[2][2]
+
+    a1 = -eye[0] * vx - eye[1] * vy - eye[2] * vz
+    a2 = -eye[0] * ux - eye[1] * uy - eye[2] * uz
+    a3 = -eye[0] * nx - eye[1] * ny - eye[2] * nz
+
+    px = vx * p[0] + vy * p[1] + vz * p[2] + a1
+    py = ux * p[0] + uy * p[1] + uz * p[2] + a2
+    pz = nx * p[0] + ny * p[1] + nz * p[2] + a3
 
     return px, py, pz
 
 
 def edges_to_camera(edges: Vec3DList, camera: Coord3D, eye: Point3D):
-    new_edges = Vec3DList(sep=edges.sep())
+    new_edges = Vec3DList(sep=edges.sep(), color=edges.color())
     for edge in edges:
         p1 = point_to_camera(edge[0], camera, eye)
         p2 = point_to_camera(edge[1], camera, eye)
         new_edges.append((p1, p2))
+
+    new_edges.center(point_to_camera(edges.center(), camera, eye))
 
     return new_edges
 
