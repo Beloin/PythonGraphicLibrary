@@ -3,6 +3,7 @@ from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d
 
 from types_3d import Point3D, Vector3D, X, Y, Z
+from wireframe import Vec3DList
 
 
 class Arrow3D(FancyArrowPatch):
@@ -35,3 +36,10 @@ def draw_coordinate_system(ax, eye=None, size=1, txt="0"):
     ax.text(eye[X] + size + .1, eye[Y], eye[Z], r'$x$')
     ax.text(eye[X], eye[Y] + size + .1, eye[Z], r'$y$')
     ax.text(eye[X], eye[Y], eye[Z] + size + .1, r'$z$')
+
+
+def get_mean_point(vec: list[Vec3DList]):
+    items = [i.center() for i in vec]
+    arr = np.array(items)
+    mean = np.mean(arr, axis=0)
+    return mean[0], mean[1], mean[2]

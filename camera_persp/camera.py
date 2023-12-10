@@ -4,7 +4,6 @@ import random
 from types_3d import Point3D, Coord3D
 import math_utils
 from wireframe import Vec3DList
-import numpy as np
 
 
 def get_camera(at: Point3D, eye: Point3D) -> Coord3D:
@@ -19,8 +18,9 @@ def get_camera(at: Point3D, eye: Point3D) -> Coord3D:
     u = math_utils.minus(aux, aux_p)
     u = math_utils.normalize(u)
     v = math_utils.vetorial_product(u, n)
+    v = math_utils.normalize(v)
 
-    return v, u, n  # TODO: Check which is better...
+    return v, u, n
 
 
 def point_to_camera(p: Point3D, camera: Coord3D, eye: Point3D) -> Point3D:

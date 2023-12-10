@@ -7,7 +7,8 @@ import matplotlib
 import solids.solids as solids
 
 import transformation
-from utils_3d import draw_coordinate_system, draw_coordinate_system
+from types_3d import Point3D
+from utils_3d import draw_coordinate_system, get_mean_point
 from wireframe import Vec3DList
 
 from camera_persp import camera
@@ -18,8 +19,7 @@ solid = solids.Solid()
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-run = True
-world2cam = True
+world2cam = False
 
 
 def configure():
@@ -38,38 +38,59 @@ def configure():
 
 def main(solid_list):
     # World is -10 to 10
-    at = (5, 5, 5)
-    eye = (4, -4, 4)
-    cam = camera.get_camera(at, eye)
+
+    new_solid_list = []
+    if world2cam:
+        octante = 1
+        for item in solid_list:
+            if octante == get_octant_number(item.center()):
+                new_solid_list.append(item)
+
+        at = get_mean_point(new_solid_list)
+        eye = (4, -4, 4)
+        cam = camera.get_camera(at, eye)
+    else:
+        new_solid_list.extend(solid_list)
+        at = (2, 7, 5)
+        eye = (4, -4, 4)
+        cam = camera.get_camera(at, eye)
 
     eye_rep = solid.sphere2(color="red")  # 0 -> 1
+    at_rep = solid.sphere2(color="gray")  # 0 -> 1
     eye_rep = transformation.translate_edges(eye_rep, eye)
+    at_rep = transformation.translate_edges(at_rep, at)
 
-    for item in solid_list:
+    # Scale solids to show in real world
+    for item in new_solid_list:
         item.update(transformation.scale_solid(item, (2, 2, 2)))
 
+    # If showing in camera, get new world position and new solids positions
     if world2cam:
         to_camera = camera.point_to_camera((0, 0, 0), cam, eye)
         world_pt = solid.sphere2(color="#db3265")  # 0 -> 1
         world_pt = transformation.translate_edges(world_pt, to_camera)
 
-        for item in solid_list:
+        for item in new_solid_list:
             item.update(camera.edges_to_camera(item, cam, eye))
 
-    while run:
+    ax.clear()
+    configure()
 
-        ax.clear()
-        configure()
-        # Eye coordinate System
-        draw_coordinate_system(ax, eye, size=5, txt="eye")
-        for item in solid_list:
-            item.update(transformation.rotate_solid(item, (10, 0, 10)))
+    # Eye coordinate System
+    draw_coordinate_system(ax, eye, size=5, txt="eye")
+
+    if not world2cam:
+        draw_coordinate_system(ax, at, size=5, txt="at")
+
+    for item in new_solid_list:
+        if world2cam:
+            # Draw New World transformation
+            draw_coordinate_system(ax, to_camera, size=5, txt="World")
+            plot_axis(world_pt)
             plot_axis(item)
-
-            if world2cam:
-                # Draw New World transformation
-                plot_axis(world_pt)
-                draw_coordinate_system(ax, to_camera, size=5, txt="World")
+        else:
+            plot_axis(item)
+            plot_axis(at_rep)
 
         plot_axis(eye_rep)
 
@@ -86,6 +107,36 @@ def plot_axis(edges: Vec3DList):
         edge_z = [point[2] for point in vector]
 
         ax.plot(edge_x, edge_y, edge_z, color=edges.color())
+
+
+def get_octant_number(p: Point3D):
+    if p[0] >= 0 and p[1] >= 0 and p[2] >= 0:
+        return 1
+
+    if p[0] >= 0 and p[1] < 0 and p[2] >= 0:
+        return 2
+
+    if p[0] >= 0 and p[1] < 0 and p[2] < 0:
+        return 3
+
+    if p[0] >= 0 and p[1] >= 0 and p[2] < 0:
+        return 4
+
+    if p[0] < 0 and p[1] >= 0 and p[2] >= 0:
+        return 5
+
+    if p[0] < 0 and p[1] < 0 and p[2] >= 0:
+        return 6
+
+    if p[0] < 0 and p[1] < 0 and p[2] < 0:
+        return 7
+
+    if p[0] < 0 and p[1] >= 0 and p[2] < 0:
+        return 8
+
+
+def check_octantes(edges: Vec3DList, at: Point3D):
+    return get_octant_number(edges.center()) == get_octant_number(at)
 
 
 if __name__ == "__main__":
@@ -108,4 +159,3 @@ if __name__ == "__main__":
     t1 = threading.Thread(target=main, args=[all_solids])
     t1.start()
     plt.show()
-    run = False
