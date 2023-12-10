@@ -56,48 +56,48 @@ def main(solid_list):
         cam = camera.get_camera(at, eye)
 
     eye_rep = solid.sphere2(color="red")  # 0 -> 1
-    at_rep = solid.sphere2(color="gray")  # 0 -> 1
+    eye_rep = transformation.scale_solid(eye_rep, (.6, .6, .6))
     eye_rep = transformation.translate_edges(eye_rep, eye)
+
+    at_rep = solid.sphere2(color="black")  # 0 -> 1
+    at_rep = transformation.scale_solid(at_rep, (.6, .6, .6))
     at_rep = transformation.translate_edges(at_rep, at)
 
     # Scale solids to show in real world
     for item in new_solid_list:
         item.update(transformation.scale_solid(item, (2, 2, 2)))
 
+    ax.clear()
+    configure()
+
     # If showing in camera, get new world position and new solids positions
     if world2cam:
         to_camera = camera.point_to_camera((0, 0, 0), cam, eye)
         world_pt = solid.sphere2(color="#db3265")  # 0 -> 1
+        world_pt = transformation.scale_solid(world_pt, (.6, .6, .6))
         world_pt = transformation.translate_edges(world_pt, to_camera)
 
+        # Draw New World transformation
+        draw_coordinate_system(ax, to_camera, size=5, txt="World")
+        plot_axis(world_pt)
+
+        at_rep = camera.edges_to_camera(at_rep, cam, eye)
         for item in new_solid_list:
             item.update(camera.edges_to_camera(item, cam, eye))
 
-    ax.clear()
-    configure()
-
     # Eye coordinate System
+    plot_axis(eye_rep)
     draw_coordinate_system(ax, eye, size=5, txt="eye")
 
-    if not world2cam:
-        draw_coordinate_system(ax, at, size=5, txt="at")
+    # Show At
+    plot_axis(at_rep)
 
+    print(at)
     for item in new_solid_list:
-        if world2cam:
-            # Draw New World transformation
-            draw_coordinate_system(ax, to_camera, size=5, txt="World")
-            plot_axis(world_pt)
-            plot_axis(item)
-        else:
-            plot_axis(item)
-            plot_axis(at_rep)
-
-        plot_axis(eye_rep)
+        plot_axis(item)
 
         fig.canvas.draw()
         fig.canvas.flush_events()
-
-        sleep(.001)
 
 
 def plot_axis(edges: Vec3DList):
